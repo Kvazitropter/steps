@@ -22,13 +22,20 @@ export default class Tracker extends React.Component {
         { id: 'asdjj', date: '11.05.2022', distance: 3 }
       ],
     };
-    this.isValidValue = {
-      date: (value) => moment(this.formatDate(value)).isValid() ? 'valid' : 'invalid',
-      distance: (value) => Math.sign(Number(value)) === 1 ? 'valid' : 'invalid',
-    };
   }
 
   formatDate = (date) => date.split('.').reverse().join('-');
+
+  isValidValue = (type, value) => {
+    switch(type) {
+      case 'date':
+        return moment(this.formatDate(value)).isValid() ? 'valid' : 'invalid';
+      case 'distance':
+        return Math.sign(Number(value)) === 1 ? 'valid' : 'invalid';
+      default:
+        return;
+    }
+  };
 
   handleChange = ({ target }) => {
     const { value, id } = target;
@@ -37,7 +44,7 @@ export default class Tracker extends React.Component {
         ...form,
         [id]: {
           value,
-          validation: this.isValidValue[id](value),
+          validation: this.isValidValue(id, value),
         },
       }, tableRecords }
     ));
